@@ -1,0 +1,8 @@
+site_name: My Docs
+docs_dir: "md"
+site_dir: "docs"
+nav:
+    - inicio: "index.md"
+    - lamp: "pagina.md"
+theme:
+  name: readthedocs
