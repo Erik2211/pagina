@@ -3,6 +3,6 @@ docs_dir: "md"
 site_dir: "docs"
 nav:
     - inicio: "index.md"
-    - lamp: "pagina.md"
+    - docker compose: "lamp-docker-compose.md"
 theme:
   name: readthedocs

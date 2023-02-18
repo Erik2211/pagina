@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>lamp - My Docs</title>
+  <title>docker compose - My Docs</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "lamp";
-    var mkdocs_page_input_path = "pagina.md";
+    var mkdocs_page_name = "docker compose";
+    var mkdocs_page_input_path = "lamp-docker-compose.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -55,10 +55,18 @@
           
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">lamp</a>
+    <a class="current" href="./">docker compose</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#tutorial-pila-lamp">TUTORIAL PILA LAMP</a></li>
+    <li class="toctree-l2"><a href="#lamp-con-docker-compose">lamp con docker compose</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#fichero-docker-compose">Fichero docker-compose</a></li>
+        
+            <li><a class="toctree-l3" href="#dockerfile">dockerfile</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -86,7 +94,7 @@
     
       
     
-    <li>lamp</li>
+    <li>docker compose</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -96,8 +104,55 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="tutorial-pila-lamp">TUTORIAL PILA LAMP</h1>
-<p>Esto va a ser un tutorial de la pila lamp</p>
+                <h1 id="lamp-con-docker-compose">lamp con docker compose</h1>
+<p>Primero tendremos una carpeta <strong>db</strong> con la base de datos y otra carpeta <strong>www</strong> con la pagina de publicacion.</p>
+<h2 id="fichero-docker-compose">Fichero docker-compose</h2>
+<pre><code>version: &quot;3.1&quot;
+services:
+      db:
+         image: mysql
+         ports:
+              - &quot;3306:3306&quot;
+        command: --default-authentication-plugin=myql_native_password
+        environment:
+            MYSQL_DATABASE: nombre
+            MYSQL_ROOT_PASSWORD: pass
+            MYSQL_USER: user
+            MYSQL_PASSWORD: pass
+        volumes:
+            - ./db:/docker-entrypoint-initdb.d
+            - ./conf:/etc/mysql/conf.d
+            - ./persistent:/var/lib/mysql
+      web:
+        build: .
+        ports:
+            - &quot;80:80&quot;
+        volumes:
+            - ./www:/var/www/html
+        links:
+            - db
+      phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - db:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: user
+            MYSQL_PASSWORD: pass
+            MYSQL_ROOT_PASSWORD: pass
+        ports:
+            - 8080:8080
+volumes:
+    persistent:
+</code></pre>
+
+<h2 id="dockerfile">dockerfile</h2>
+<pre><code>FROM php:8.0.0-apache
+RUN docker-php-ext-install mysqli
+RUN apt update \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+</code></pre>
               
             </div>
           </div>
