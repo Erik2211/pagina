@@ -4,5 +4,6 @@ site_dir: "docs"
 nav:
     - inicio: "index.md"
     - docker: "dockercomp.md"
+    - wordpress: "wordpress.md"
 theme:
   name: readthedocs
